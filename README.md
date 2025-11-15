@@ -1,6 +1,7 @@
 # Member Query Bot
 
 A **question-answering assistant** for high-end member data.  
+
 This API allows you to ask natural-language questions about members (e.g., “When is Layla planning her trip to London?”), and the API returns answers inferred from the member messages dataset.
 
 It uses **vector embeddings** for retrieval and a **local LLM** for generating answers, fully free and locally deployable.
@@ -10,11 +11,11 @@ It uses **vector embeddings** for retrieval and a **local LLM** for generating a
 ## Features
 
 - Retrieve relevant member messages using **FAISS** & **SentenceTransformers**
-- Generate answers using a Ollama
+- Generate answers using a **Ollama**
 - Single API endpoint: `/ask`
-- Fully free to run — no paid APIs required
-- Upgradable via altering parts of the stack with higher-cost tools and softwares
 - Easy to extend to new datasets
+- Fully free to run — no paid APIs required
+- Upgradable via altering pieces of the stack with higher-cost tools and softwares
 
 ---
 
@@ -101,7 +102,7 @@ During the design phase, I evaluated several alternative approaches for building
 
 **Cloud-Based Vector Databases:** Instead of FAISS, I could have used managed vector databases like Pinecone ($70/month), Qdrant Cloud ($25/month), or Weaviate for production-grade semantic search. These services offer built-in features like real-time indexing, metadata filtering, and high availability, eliminating infrastructure management overhead. The trade-off is recurring costs and external dependency, whereas FAISS runs entirely locally and free.
 
-**Commercial LLM APIs:** Using OpenAI's GPT-4 API (~$0.01-0.03 per query) or Anthropic's Claude API (~$0.015 per query) instead of local Ollama would provide advanced and cutting-edge language understanding with further improved responses. These models excel at context synthesis and require minimal prompt engineering compared to smaller open-source alternatives. However, this introduces per-request costs, requires internet connectivity, and sends user data to external servers, whereas Ollama (Llama 3.2) runs completely free and offline.
+**Commercial LLM APIs:** Using OpenAI's GPT-4 API or Anthropic's Claude API instead of local Ollama would provide advanced and cutting-edge language understanding with further improved responses. These models excel at context synthesis and require minimal prompt engineering compared to smaller open-source alternatives. However, this introduces per-request costs, requires internet connectivity, and sends user data to external servers, whereas Ollama (Llama 3.2) runs completely free and offline.
 
 **Fine-Tuned Custom Models:** I considered training a small language model like GPT-2, DistilBERT, or T5-small specifically on the member messages dataset using Hugging Face Transformers to create a domain-specialized Q&A system. This would optimize performance for the specific vocabulary, patterns, and request types present in the data. However, with only 100 messages, there's insufficient training data for meaningful fine-tuning, and the development effort would significantly outweigh benefits compared to leveraging pre-trained models.
 
@@ -129,7 +130,7 @@ The dataset contains 5 columns: `id`, `user_id`, `user_name`, `timestamp`, and `
 
 ---
 
-### **First 10 Rows of Data**
+### **First 5 Rows of Data**
 
 | id | user_id | user_name | timestamp | message |
 |----|---------|-----------|-----------|---------|
@@ -143,12 +144,19 @@ The dataset contains 5 columns: `id`, `user_id`, `user_name`, `timestamp`, and `
 ### Data Quality Summary
 
 **Perfect completeness:** Zero null values, empty fields, or missing data  
+
 **Consistent user identity:** No duplicate or conflicting user_id/user_name mappings  
+
 **Valid timestamps:** All dates parse correctly with no future timestamps  
+
 **High uniformity:** Message lengths and formatting show unusually low variance  
+
 **Small dataset:** 100 messages from 10 users limits statistical significance  
+
 **Limited time range:** 12-month span may not capture long-term trends, but it is a good starting place for development
-**Some non-ASCII characters present in messages:** 15% of messages contain non-ASCII characters (accented names, international locations)  
+
+**Some non-ASCII characters present in messages:** 15% of messages contain non-ASCII characters (accented names, international locations)
+  
 **Anomalies Identified:** The dataset exhibits fantastic quality with no anomalies, inconsistencies, or data integrity issues detected.
 ---
 ### Data Completeness
