@@ -1,18 +1,23 @@
-# flyctl launch added from .gitignore
-#common Python exclusions
-**\@"
-**\__pycache__
-**\*.py[cod]
-**\*$py.class
-**\*.so
-**\.Python
-**\env
-**\venv
-**\*.pkl
-**\*.json
-**\.env
-**\.DS_Store
-**\*.pyc
-**\analysis_output
-**\"@ | Out-File -FilePath .gitignore -Encoding utf8
+# Python cache and build artifacts
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+**/*.so
+.Python
+env/
+venv/
+
+# Environment and config
+.env
+.DS_Store
+
+# Analysis output (not needed for deployment)
+**/analysis_output
+
+# Git
+.git
+.gitignore
+
+# Development files
+*.md
 fly.toml
