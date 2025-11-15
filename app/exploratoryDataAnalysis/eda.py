@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime, timezone
-from collections import Counter
 import os
+from wordcloud import WordCloud
 
 # Create output directory for charts
 os.makedirs("analysis_output", exist_ok=True)
@@ -54,7 +54,7 @@ add_text(df.describe(include='all').to_string())
 # null value analysis
 add_section("NULL VALUE ANALYSIS")
 
-null_counts = df.isnull().sum()  # <-- DEFINED HERE
+null_counts = df.isnull().sum()
 null_percentages = (df.isnull().sum() / len(df) * 100).round(2)
 null_df = pd.DataFrame({
     'Column': null_counts.index,
@@ -64,34 +64,21 @@ null_df = pd.DataFrame({
 add_text(null_df.to_string())
 
 # null value visualizations
-if null_counts.sum() > 0:  # <-- USED HERE (should work)
+if null_counts.sum() > 0:
     plt.figure(figsize=(10, 6))
     null_percentages.plot(kind='bar', color='salmon')
-    plt.title('Percentage of Null Values by Column', fontsize=14, fontweight='bold')
-    plt.xlabel('Column')
-    plt.ylabel('Null Percentage (%)')
-    plt.xticks(rotation=45, ha='right')
+    plt.title('Percentage of Null Values by Column', fontsize=18, fontweight='normal', 
+            fontfamily='serif', pad=20)
+    plt.xlabel('Column', fontsize=12, fontfamily='serif')
+    plt.ylabel('Null Percentage (%)', fontsize=12, fontfamily='serif')
+    plt.xticks(rotation=45, ha='right', fontfamily='serif', fontsize=10)
+    plt.yticks(fontfamily='serif', fontsize=10)
     plt.tight_layout()
     plt.savefig('analysis_output/null_values.png', dpi=300)
     plt.close()
     add_text("\n📊 Chart saved: analysis_output/null_values.png\n")
 else:
-    add_text("\n✅ No null values present - no null percentage chart needed.\n")
-
-# missing value stats
-add_section("EMPTY OR WHITESPACE VALUES")
-
-empty_stats = {}
-for col in df.columns:
-    if df[col].dtype == 'object':
-        empty_count = df[col].str.strip().eq('').sum()
-        empty_stats[col] = {
-            'Empty Count': empty_count,
-            'Empty Percentage': round(empty_count / len(df) * 100, 2)
-        }
-
-empty_df = pd.DataFrame(empty_stats).T
-add_text(empty_df.to_string())
+    add_text("\n✅ No null values present.\n")
 
 # analysis of message details
 add_section("MESSAGE LENGTH DETAILS")
@@ -103,17 +90,25 @@ add_text(length_stats.to_string())
 
 # message length distribution
 plt.figure(figsize=(12, 6))
+
 plt.subplot(1, 2, 1)
 df['message_length'].hist(bins=50, color='skyblue', edgecolor='black')
-plt.title('Message Length Distribution', fontweight='bold')
-plt.xlabel('Message Length (characters)')
-plt.ylabel('Frequency')
+plt.title('Message Length Distribution', fontsize=16, fontweight='normal', 
+          fontfamily='serif', pad=15)
+plt.xlabel('Message Length (characters)', fontsize=11, fontfamily='serif')
+plt.ylabel('Frequency', fontsize=11, fontfamily='serif')
+plt.xticks(fontfamily='serif', fontsize=9)
+plt.yticks(fontfamily='serif', fontsize=9)
 plt.grid(axis='y', alpha=0.3)
 
 plt.subplot(1, 2, 2)
 df['message_length'].plot(kind='box', color='lightgreen')
-plt.title('Message Length Box Plot', fontweight='bold')
-plt.ylabel('Message Length (characters)')
+plt.title('Message Length Box Plot', fontsize=16, fontweight='normal', 
+          fontfamily='serif', pad=15)
+plt.ylabel('Message Length (characters)', fontsize=11, fontfamily='serif')
+plt.xticks(fontfamily='serif', fontsize=9)
+plt.yticks(fontfamily='serif', fontsize=9)
+
 plt.tight_layout()
 plt.savefig('analysis_output/message_length.png', dpi=300)
 plt.close()
@@ -135,14 +130,37 @@ add_text(top_users.to_string())
 # user activity chart
 plt.figure(figsize=(12, 6))
 top_users.plot(kind='barh', color='coral')
-plt.title('Top 10 Most Active Users', fontsize=14, fontweight='bold')
-plt.xlabel('Number of Messages')
-plt.ylabel('User Name')
+plt.title('Top 10 Most Active Users', fontsize=18, fontweight='normal', 
+          fontfamily='serif', pad=20)
+plt.xlabel('Number of Messages', fontsize=12, fontfamily='serif')
+plt.ylabel('User Name', fontsize=12, fontfamily='serif')
+plt.xticks(fontfamily='serif', fontsize=10)
+plt.yticks(fontfamily='serif', fontsize=10)
 plt.gca().invert_yaxis()
 plt.tight_layout()
 plt.savefig('analysis_output/top_users.png', dpi=300)
 plt.close()
 add_text("\n📊 Chart saved: analysis_output/top_users.png\n")
+
+# Word cloud
+add_section("COMMON WORDS IN MESSAGES")
+
+# Combine all messages
+all_text = ' '.join(df['message'].values)
+
+# Generate word cloud
+wordcloud = WordCloud(width=1200, height=600, background_color='white', 
+                      colormap='viridis', relative_scaling=0.5).generate(all_text)
+
+plt.figure(figsize=(14, 7))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis('off')
+plt.title('Most Common Words in Messages', fontsize=18, fontweight='normal', 
+          fontfamily='serif', pad=20)
+plt.tight_layout()
+plt.savefig('analysis_output/word_cloud.png', dpi=300)
+plt.close()
+add_text("\n📊 Chart saved: analysis_output/word_cloud.png\n")
 
 # user id consistency check
 add_section("USER ID CONSISTENCY ANALYSIS")
@@ -165,8 +183,12 @@ add_section("TIMESTAMP ANALYSIS")
 # convert timestamps
 df['timestamp_parsed'] = pd.to_datetime(df['timestamp'], errors='coerce')
 
-# check for invalid timestamps
-now = datetime.now(timezone.utc)
+# Make timestamps timezone-naive if they have timezone info
+if df['timestamp_parsed'].dt.tz is not None:
+    df['timestamp_parsed'] = df['timestamp_parsed'].dt.tz_localize(None)
+
+# check for future timestamps
+now = datetime.now()
 future_count = (df['timestamp_parsed'] > now).sum()
 add_text(f"Messages with future timestamps: {future_count}")
 
@@ -179,16 +201,69 @@ if not df['timestamp_parsed'].isnull().all():
     daily_counts = df.groupby('date').size()
     
     plt.figure(figsize=(14, 6))
-    daily_counts.plot(kind='line', color='mediumpurple', linewidth=2)
-    plt.title('Messages Over Time', fontsize=14, fontweight='bold')
-    plt.xlabel('Date')
-    plt.ylabel('Number of Messages')
-    plt.xticks(rotation=45)
+    daily_counts.plot(kind='line', color='mediumpurple', linewidth=3.5)
+    
+    plt.title('Messages by Day', fontsize=18, fontweight='normal', 
+              fontfamily='serif', pad=20)
+    plt.xlabel('Date', fontsize=12, fontfamily='serif')
+    plt.ylabel('Number of Messages', fontsize=12, fontfamily='serif')
+    plt.xticks(rotation=45, fontfamily='serif', fontsize=10)
+    plt.yticks(fontfamily='serif', fontsize=10)
+    
+    # Force y-axis to show only integers
+    plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    
     plt.grid(alpha=0.3)
     plt.tight_layout()
     plt.savefig('analysis_output/messages_over_time.png', dpi=300)
     plt.close()
     add_text("\n📊 Chart saved: analysis_output/messages_over_time.png\n")
+
+# User activity patterns - CREATE THE COLUMNS HERE FIRST
+add_section("USER ACTIVITY PATTERNS")
+
+# Extract day of week and hour - MUST BE BEFORE USING THEM
+df['day_of_week'] = df['timestamp_parsed'].dt.day_name()
+df['hour'] = df['timestamp_parsed'].dt.hour
+
+# Messages by day of week
+day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+day_counts = df['day_of_week'].value_counts().reindex(day_order, fill_value=0)
+
+plt.figure(figsize=(10, 6))
+day_counts.plot(kind='bar', color='steelblue')
+plt.title('Message Distribution by Day of Week', fontsize=18, fontweight='normal', 
+          fontfamily='serif', pad=20)
+plt.xlabel('Day of Week', fontsize=12, fontfamily='serif')
+plt.ylabel('Number of Messages', fontsize=12, fontfamily='serif')
+plt.xticks(rotation=45, ha='right', fontfamily='serif', fontsize=10)
+plt.yticks(fontfamily='serif', fontsize=10)
+plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+plt.tight_layout()
+plt.savefig('analysis_output/day_of_week.png', dpi=300)
+plt.close()
+add_text("\n📊 Chart saved: analysis_output/day_of_week.png\n")
+
+# Messages by hour - NOW HOUR EXISTS
+hour_counts = df['hour'].value_counts().sort_index()
+
+plt.figure(figsize=(12, 6))
+hour_counts.plot(kind='line', color='darkgreen', linewidth=3.5, marker='o')
+plt.title('Message Activity by Hour of Day', fontsize=18, fontweight='normal', 
+          fontfamily='serif', pad=20)
+plt.xlabel('Hour of Day (24-hour format)', fontsize=12, fontfamily='serif')
+plt.ylabel('Number of Messages', fontsize=12, fontfamily='serif')
+plt.xticks(range(0, 24), fontfamily='serif', fontsize=10)
+plt.yticks(fontfamily='serif', fontsize=10)
+plt.gca().yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.savefig('analysis_output/hourly_activity.png', dpi=300)
+plt.close()
+add_text("\n📊 Chart saved: analysis_output/hourly_activity.png\n")
+
+add_text(f"\nPeak activity hour: {hour_counts.idxmax()}:00 with {hour_counts.max()} messages")
+add_text(f"Lowest activity hour: {hour_counts.idxmin()}:00 with {hour_counts.min()} messages")
 
 # null value correlations
 add_section("NULL VALUE PATTERN ANALYSIS")
@@ -212,7 +287,9 @@ if null_counts.sum() > 0:
     sns.heatmap(null_corr, annot=True, cmap='coolwarm', center=0, 
                 square=True, linewidths=1, cbar_kws={"shrink": 0.8})
     plt.title('Correlation Between Null Values in Different Columns', 
-              fontsize=12, fontweight='bold')
+            fontsize=16, fontweight='normal', fontfamily='serif', pad=20)
+    plt.xticks(fontfamily='serif', fontsize=9)
+    plt.yticks(fontfamily='serif', fontsize=9)
     plt.tight_layout()
     plt.savefig('analysis_output/null_correlation.png', dpi=300)
     plt.close()
@@ -267,8 +344,9 @@ print(f"\n📄 Full report saved to: analysis_output/data_analysis_report.txt")
 print(f"📊 Charts saved to: analysis_output/")
 print("\nGenerated files:")
 print("  - data_analysis_report.txt")
-print("  - null_values.png")
 print("  - message_length.png")
 print("  - top_users.png")
+print("  - word_cloud.png")
 print("  - messages_over_time.png")
-print("  - null_correlation.png")
+print("  - day_of_week.png")
+print("  - hourly_activity.png")

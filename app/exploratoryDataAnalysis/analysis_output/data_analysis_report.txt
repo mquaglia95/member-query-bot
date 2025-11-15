@@ -57,19 +57,8 @@ freq                                       1                                    
 3  timestamp           0              0.0
 4    message           0              0.0
 
-✅ No null values present - no null percentage chart needed.
+✅ No null values present.
 
-
-================================================================================
-                           EMPTY OR WHITESPACE VALUES                           
-================================================================================
-
-           Empty Count  Empty Percentage
-id                 0.0               0.0
-user_id            0.0               0.0
-user_name          0.0               0.0
-timestamp          0.0               0.0
-message            0.0               0.0
 
 ================================================================================
                              MESSAGE LENGTH DETAILS                             
@@ -95,6 +84,7 @@ Unique user IDs: 10
 Unique user names: 10
 
 Top 10 Users by Message Count:
+user_name
 Sophia Al-Farsi       16
 Fatima El-Tahir       15
 Hans Müller           11
@@ -107,6 +97,14 @@ Lorenzo Cavalli        7
 Amina Van Den Berg     5
 
 📊 Chart saved: analysis_output/top_users.png
+
+
+================================================================================
+                            COMMON WORDS IN MESSAGES                            
+================================================================================
+
+
+📊 Chart saved: analysis_output/word_cloud.png
 
 
 ================================================================================
@@ -124,6 +122,20 @@ Messages with invalid timestamps: 0
 
 📊 Chart saved: analysis_output/messages_over_time.png
 
+
+================================================================================
+                             USER ACTIVITY PATTERNS                             
+================================================================================
+
+
+📊 Chart saved: analysis_output/day_of_week.png
+
+
+📊 Chart saved: analysis_output/hourly_activity.png
+
+
+Peak activity hour: 14:00 with 13 messages
+Lowest activity hour: 0:00 with 1 messages
 
 ================================================================================
                           NULL VALUE PATTERN ANALYSIS                           
