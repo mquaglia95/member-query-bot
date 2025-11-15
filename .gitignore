@@ -11,4 +11,6 @@ venv/
 *.json
 .env
 .DS_Store
+*.pyc
+analysis_output/
 "@ | Out-File -FilePath .gitignore -Encoding utf8

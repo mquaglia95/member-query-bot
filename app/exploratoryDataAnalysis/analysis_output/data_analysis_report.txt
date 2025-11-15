@@ -83,7 +83,7 @@ max       84.000000
 Unique user IDs: 10
 Unique user names: 10
 
-Top 10 Users by Message Count:
+Users by Message Count:
 user_name
 Sophia Al-Farsi       16
 Fatima El-Tahir       15
