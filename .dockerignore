@@ -1,0 +1,18 @@
+# flyctl launch added from .gitignore
+#common Python exclusions
+**\@"
+**\__pycache__
+**\*.py[cod]
+**\*$py.class
+**\*.so
+**\.Python
+**\env
+**\venv
+**\*.pkl
+**\*.json
+**\.env
+**\.DS_Store
+**\*.pyc
+**\analysis_output
+**\"@ | Out-File -FilePath .gitignore -Encoding utf8
+fly.toml

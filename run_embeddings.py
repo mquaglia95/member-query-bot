@@ -1,8 +1,6 @@
 import json
 import faiss
-import numpy as np
 from sentence_transformers import SentenceTransformer
-import os
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
@@ -10,17 +8,17 @@ print("Loading messages...")
 with open("app/messages.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
-# handle paginated response format
+# Handle paginated response format
 if isinstance(data, dict) and "items" in data:
     messages = data["items"]
 else:
     messages = data
 
-# filter out messages with empty text
+# Filter out messages with empty text
 valid_messages = [m for m in messages if m.get("message", "").strip()]
 print(f"Valid messages for embedding: {len(valid_messages)}")
 
-# extract text for embedding
+# Extract text for embedding
 texts = [msg["message"] for msg in valid_messages]
 
 print(f"Loading embedding model: {MODEL_NAME}...")
@@ -37,7 +35,7 @@ index.add(embeddings)
 print("Saving index and messages...")
 faiss.write_index(index, "app/vector_index.pkl")
 
-# save the valid messages with their indices
+# Save the valid messages with their indices
 with open("app/indexed_messages.json", "w", encoding="utf-8") as f:
     json.dump(valid_messages, f, indent=2, ensure_ascii=False)
 

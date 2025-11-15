@@ -53,7 +53,7 @@ def generate_answer(question: str, relevant_messages: list):
     context = "\n".join(context_parts)
     
     # Create prompt for LLM
-    prompt = f"""You are a helpful assistant that answers questions based solely on the provided member messages.
+    prompt = f"""You are a helpful assistant that answers questions based on the provided member messages.
 
 Member Messages:
 {context}
