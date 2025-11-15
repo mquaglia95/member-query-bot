@@ -1,4 +1,4 @@
-# memberQueryBot
+# Member Query Bot
 
 A **question-answering assistant** for high-end member data.  
 This API allows you to ask natural-language questions about members (e.g., “When is Layla planning her trip to London?”), and the API returns answers inferred from the member messages dataset.
