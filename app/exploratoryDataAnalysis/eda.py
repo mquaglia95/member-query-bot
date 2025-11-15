@@ -124,7 +124,7 @@ add_text(f"Unique user names: {unique_names}")
 
 # top 10 users by message count
 top_users = df['user_name'].value_counts().head(10)
-add_text("\nTop 10 Users by Message Count:")
+add_text(f"\nUsers by Message Count:")
 add_text(top_users.to_string())
 
 # user activity chart
