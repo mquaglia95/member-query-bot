@@ -2,6 +2,7 @@ import faiss
 import json
 import os
 from sentence_transformers import SentenceTransformer
+import requests
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 TOP_K = 5
@@ -40,27 +41,56 @@ def retrieve_relevant_messages(question: str, k: int = TOP_K):
     return results
 
 def generate_answer(question: str, relevant_messages: list):
-    """Generate answer from retrieved messages."""
+    """Generate answer using Ollama LLM with retrieved messages as context."""
     if not relevant_messages:
         return "I couldn't find any relevant information in the messages to answer your question."
     
-    # For now, return a formatted response with the most relevant messages
-    # TODO: Integrate LLM for more natural language generation
-    
-    best_match = relevant_messages[0]
-    
-    # If the best match is very close (low distance), use it directly
-    if best_match['distance'] < 0.5:
-        return f"{best_match['user_name']} said: \"{best_match['message']}\""
-    
-    # Otherwise, show top 3 relevant messages
+    # Build context from top 5 most relevant messages
     context_parts = []
-    for i, msg in enumerate(relevant_messages[:3], 1):
-        context_parts.append(f"{i}. {msg['user_name']}: {msg['message']}")
+    for msg in relevant_messages[:5]:
+        context_parts.append(f"- {msg['user_name']}: {msg['message']}")
     
     context = "\n".join(context_parts)
     
-    return f"Here are the most relevant messages I found:\n\n{context}\n\n(Note: LLM integration coming soon for more natural answers)"
+    # Create prompt for LLM
+    prompt = f"""You are a helpful assistant that answers questions based solely on the provided member messages.
+
+Member Messages:
+{context}
+
+Question: {question}
+
+Instructions:
+- Answer the question directly and concisely using ONLY information from the messages above
+- If the answer is not in the messages, say "I couldn't find that information in the messages"
+- Be specific - include names, dates, locations, or numbers when relevant
+- Keep your answer brief (1-2 sentences)
+
+Answer:"""
+    
+    try:
+        # Call Ollama API
+        response = requests.post('http://localhost:11434/api/generate', 
+            json={
+                'model': 'llama3.2',
+                'prompt': prompt,
+                'stream': False
+            },
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            answer = response.json()['response'].strip()
+            return answer
+        else:
+            return f"Error: Could not generate answer (status {response.status_code})"
+            
+    except requests.exceptions.ConnectionError:
+        return "Error: Ollama is not running. Please start Ollama service."
+    except requests.exceptions.Timeout:
+        return "Error: Answer generation timed out."
+    except Exception as e:
+        return f"Error generating answer: {str(e)}"
 
 def answer_question(question: str):
     """Main function to answer a question."""
