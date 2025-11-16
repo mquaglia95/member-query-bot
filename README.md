@@ -11,7 +11,7 @@ It uses **vector embeddings** for retrieval and a **local LLM** for generating a
 ## Features
 
 - Retrieve relevant member messages using **FAISS** & **SentenceTransformers**
-- Generate answers using a **Ollama**
+- Generate answers using a **Groq**
 - Single API endpoint: `/ask`
 - Easy to extend to new datasets
 - Fully free to run — no paid APIs required
@@ -19,7 +19,27 @@ It uses **vector embeddings** for retrieval and a **local LLM** for generating a
 
 ---
 
-## Getting Started
+## Try it out
+
+### **1. Navigate to the deployed application**
+
+[Member Query Chatbot](https://member-query-bot.fly.dev/docs)
+
+### **2. Select the POST /ask endpoint**
+
+Click on the green box to expand the POST /ask Ask Question drop down
+
+### **3. Select "Try it out!"**
+
+Select the "Try it out!" button to edit the "question", changing "string" to your specified query.
+
+### **4. Run the query**
+
+Select "Execute" to run the query, and scroll down to see result!
+
+---
+
+## Deployment Instructions
 
 ### **1. Clone the repository**
 ```bash
@@ -44,15 +64,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### **4. Install and set up Ollama (for LLM-powered answers)**
+### **4. Set up Groq API (for LLM-powered answers)**
 ```bash
-# Download and install Ollama from: https://ollama.com/download
+Create an API key at: https://console.groq.com/keys
 
-# Pull the llama3.2 model
-ollama pull llama3.2
+# Set the API key as an environment variable
+# On Windows (PowerShell):
+$env:GROQ_API_KEY="your_groq_api_key_here"
 
-# Verify Ollama is running
-ollama list
+# On macOS/Linux:
+export GROQ_API_KEY="your_groq_api_key_here"
 ```
 
 ### **5. Fetch member messages from API**
@@ -102,13 +123,13 @@ During the design phase, I evaluated several alternative approaches for building
 
 **Cloud-Based Vector Databases:** Instead of FAISS, I could have used managed vector databases like Pinecone ($70/month), Qdrant Cloud ($25/month), or Weaviate for production-grade semantic search. These services offer built-in features like real-time indexing, metadata filtering, and high availability, eliminating infrastructure management overhead. The trade-off is recurring costs and external dependency, whereas FAISS runs entirely locally and free.
 
-**Commercial LLM APIs:** Using OpenAI's GPT-4 API or Anthropic's Claude API instead of local Ollama would provide advanced and cutting-edge language understanding with further improved responses. These models excel at context synthesis and require minimal prompt engineering compared to smaller open-source alternatives. However, this introduces per-request costs, requires internet connectivity, and sends user data to external servers, whereas Ollama (Llama 3.2) runs completely free and offline.
+**Commercial LLM APIs:** Using OpenAI's GPT-4 API or Anthropic's Claude API instead of the Groq API would provide advanced and cutting-edge language understanding with further improved responses. These models excel at context synthesis and require minimal prompt engineering compared to smaller open-source alternatives. However, this introduces per-request costs, requires internet connectivity, and sends user data to external servers, whereas Groq allows for a set number of requests for free before charges begin.
 
 **Fine-Tuned Custom Models:** I considered training a small language model like GPT-2, DistilBERT, or T5-small specifically on the member messages dataset using Hugging Face Transformers to create a domain-specialized Q&A system. This would optimize performance for the specific vocabulary, patterns, and request types present in the data. However, with only 100 messages, there's insufficient training data for meaningful fine-tuning, and the development effort would significantly outweigh benefits compared to leveraging pre-trained models.
 
 **Multi-Model RAG Pipelines:** A more sophisticated approach would implement a modular RAG pipeline using frameworks like LangChain or LlamaIndex, with separate specialized models for each task: Cohere Rerank API for retrieval ranking, OpenAI Ada for embeddings, and GPT-4 for answer synthesis. This architecture allows independent optimization of each component and potentially higher overall accuracy. The downsides include increased system complexity, higher computational requirements with multiple API calls, monthly costs exceeding $100, and longer response times compared to the current streamlined single-model approach.
 
-**Chosen Approach:** The selected architecture using FAISS for vector indexing, SentenceTransformers (all-MiniLM-L6-v2) for embeddings, Ollama with Llama 3.2 for local LLM inference, and FastAPI for the REST API framework balances cost, performance, and complexity. This combination provides production-quality semantic search and natural language generation completely free and offline, runs with minimal infrastructure, scales well to millions of vectors, and demonstrates modern AI techniques including embeddings, vector search, and LLMs—making it ideal for both a functional application and a technical demonstration.
+**Chosen Approach:** The selected architecture using FAISS for vector indexing, SentenceTransformers (all-MiniLM-L6-v2) for embeddings, Groq API for LLM inference, and FastAPI for the REST API framework balances cost, performance, and complexity. This combination provides production-quality semantic search and natural language generation completely free and offline, runs with minimal infrastructure, scales well to millions of vectors, and demonstrates modern AI techniques including embeddings, vector search, and LLMs—making it ideal for both a functional application and a technical demonstration.
 
 ## **Exploratory Data Analysis**
 
