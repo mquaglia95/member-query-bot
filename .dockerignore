@@ -1,0 +1,24 @@
+# Python cache and build artifacts
+**/__pycache__
+**/*.py[cod]
+**/*$py.class
+**/*.so
+.Python
+env/
+venv/
+app/exploratoryDataAnalysis/analysis_output/
+
+# Environment and config
+.env
+.DS_Store
+
+# Analysis output (not needed for deployment)
+**/analysis_output
+
+# Git
+.git
+.gitignore
+
+# Development files
+*.md
+fly.toml
