@@ -1,0 +1,160 @@
+
+================================================================================
+                                 DATA OVERVIEW                                  
+================================================================================
+
+Total number of messages: 100
+Number of columns: 5
+Columns: ['id', 'user_id', 'user_name', 'timestamp', 'message']
+
+
+================================================================================
+                             FIRST 10 ROWS OF DATA                              
+================================================================================
+
+                                     id                               user_id        user_name                         timestamp                                                                               message
+0  b1e9bb83-18be-4b90-bbb8-83b7428e8e21  cd3a350e-dbd2-408f-afa0-16a072f56d23  Sophia Al-Farsi  2025-05-05T07:47:20.159073+00:00                                   Please book a private jet to Paris for this Friday.
+1  609ba052-c9e7-49e6-8b62-061eb8785b63  e35ed60a-5190-4a5f-b3cd-74ced7519b4a  Fatima El-Tahir  2024-11-14T20:03:44.159235+00:00  Can you confirm my dinner reservation at The French Laundry for four people tonight?
+2  44be0607-a918-40fa-a122-b2435fe54f3e  23103ae5-38a8-4d82-af82-e9942aa4aefb    Armand Dupont  2025-03-09T02:25:23.159256+00:00                               I need two tickets to the opera in Milan this Saturday.
+3  a1579c1b-7f25-4d92-b421-0982f8fbf566  5b2e7346-eef5-445d-a063-6c5267f04bf8      Hans Müller  2025-08-02T05:20:44.159269+00:00                      Could you check why my recent payment hasn't been processed yet?
+4  43d8a12e-4fdb-4c82-8a78-f7dfff583b9f  fc15e14c-f56f-4137-a7cd-797f90b61c93  Layla Kawaguchi  2025-04-10T06:52:16.159280+00:00                               Please remember I prefer aisle seats during my flights.
+5  d848fff4-b4e6-4111-8ba8-b5e33ca74d10  23103ae5-38a8-4d82-af82-e9942aa4aefb    Armand Dupont  2025-09-05T16:42:34.159290+00:00                              Can you arrange a private yacht for a weekend in Monaco?
+6  5e0c17ce-5b05-4fa5-a3fe-14c66c79e044  cd3a350e-dbd2-408f-afa0-16a072f56d23  Sophia Al-Farsi  2025-01-21T15:01:42.159300+00:00      I haven't received the itinerary for my upcoming trip—can you provide an update?
+7  8aa3818a-2f58-41f0-b9c0-0e0b1af22f8a  cd3a350e-dbd2-408f-afa0-16a072f56d23  Sophia Al-Farsi  2025-10-07T14:13:39.159309+00:00      The concert tickets I received were perfect; thank you for arranging everything.
+8  a5759130-9354-48cd-a398-949661844fcb  23103ae5-38a8-4d82-af82-e9942aa4aefb    Armand Dupont  2025-02-12T05:58:08.159318+00:00                      Please update my profile with my new phone number: 555-349-7841.
+9  4df0ad3b-d73a-45fa-81b5-29f803d54783  fc15e14c-f56f-4137-a7cd-797f90b61c93  Layla Kawaguchi  2025-05-19T13:34:32.159327+00:00                             Book a villa in Santorini for the first week of December.
+
+================================================================================
+                                   DATA TYPES                                   
+================================================================================
+
+id           object
+user_id      object
+user_name    object
+timestamp    object
+message      object
+
+
+
+================================================================================
+                                BASIC STATISTICS                                
+================================================================================
+
+                                          id                               user_id        user_name                         timestamp                                              message
+count                                    100                                   100              100                               100                                                  100
+unique                                   100                                    10               10                               100                                                  100
+top     b1e9bb83-18be-4b90-bbb8-83b7428e8e21  cd3a350e-dbd2-408f-afa0-16a072f56d23  Sophia Al-Farsi  2025-05-05T07:47:20.159073+00:00  Please book a private jet to Paris for this Friday.
+freq                                       1                                    16               16                                 1                                                    1
+
+================================================================================
+                              NULL VALUE ANALYSIS                               
+================================================================================
+
+      Column  Null Count  Null Percentage
+0         id           0              0.0
+1    user_id           0              0.0
+2  user_name           0              0.0
+3  timestamp           0              0.0
+4    message           0              0.0
+
+✅ No null values present.
+
+
+================================================================================
+                             MESSAGE LENGTH DETAILS                             
+================================================================================
+
+count    100.000000
+mean      63.620000
+std        8.852073
+min       47.000000
+25%       56.750000
+50%       63.500000
+75%       69.000000
+max       84.000000
+
+📊 Chart saved: analysis_output/message_length.png
+
+
+================================================================================
+                                 USER ANALYSIS                                  
+================================================================================
+
+Unique user IDs: 10
+Unique user names: 10
+
+Users by Message Count:
+user_name
+Sophia Al-Farsi       16
+Fatima El-Tahir       15
+Hans Müller           11
+Layla Kawaguchi       10
+Vikram Desai          10
+Lily O'Sullivan       10
+Armand Dupont          8
+Thiago Monteiro        8
+Lorenzo Cavalli        7
+Amina Van Den Berg     5
+
+📊 Chart saved: analysis_output/top_users.png
+
+
+================================================================================
+                            COMMON WORDS IN MESSAGES                            
+================================================================================
+
+
+📊 Chart saved: analysis_output/word_cloud.png
+
+
+================================================================================
+                          USER ID CONSISTENCY ANALYSIS                          
+================================================================================
+
+User IDs with multiple different names: 0
+
+================================================================================
+                               TIMESTAMP ANALYSIS                               
+================================================================================
+
+Messages with future timestamps: 0
+Messages with invalid timestamps: 0
+
+📊 Chart saved: analysis_output/messages_over_time.png
+
+
+================================================================================
+                             USER ACTIVITY PATTERNS                             
+================================================================================
+
+
+📊 Chart saved: analysis_output/day_of_week.png
+
+
+📊 Chart saved: analysis_output/hourly_activity.png
+
+
+Peak activity hour: 14:00 with 13 messages
+Lowest activity hour: 0:00 with 1 messages
+
+================================================================================
+                          NULL VALUE PATTERN ANALYSIS                           
+================================================================================
+
+✅ No null values present - no pattern analysis needed.
+
+
+================================================================================
+                          CHARACTER ENCODING ANALYSIS                           
+================================================================================
+
+Messages with non-ASCII characters: 15
+Percentage: 15.0%
+
+================================================================================
+                              DATA QUALITY SUMMARY                              
+================================================================================
+
+Data Quality Issues Found:
+
+ℹ️  15 messages contain non-ASCII characters

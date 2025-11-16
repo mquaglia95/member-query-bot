@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from datetime import datetime, timezone
+from datetime import datetime
 import os
 from wordcloud import WordCloud
 
